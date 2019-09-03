@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MWT - Mini Game</title> 
+        <link href="../styles/main.css" rel="stylesheet" />
+        <link href="ping_pong.css" rel="stylesheet" />
+    </head>
+<body>
+	<script language="javascript" type="text/javascript" 
+                src="mini_game_header.txt"></script>
+        <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="#news">News</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a class="active" href="../ping_pong.html">Mini game</a></li>
+            <li style="float:right"><a href="../about.html">About</a></li>
+        </ul>
+<canvas id = "gameCanvas" width = "800" height = "600">
+</canvas>
+<script>
+
+var canvas
+var canvasContext;
+
+
+const PADDLE_HEIGHT = 100;
+const PADDLE_WIDTH =10;
+const POINTS_TO_WIN = 7;
+
+var ballSize= 10;
+var fps = 60;
+var ballX = 400;
+var ballY = 300;
+var ballStartSpeed = 500;
+var ballSpeedX = ballStartSpeed;
+var ballSpeedY = ballStartSpeed/2;
+var speedLevel = "Normal";
+
+var paddleLeftY = 250;
+var paddleRightY = 250;
+var botActivate = true;
+var botLevel = "Normal";
+var botSpeed = 6;
+
+var hitCount = 0;
+var player1Score = 0;
+var player2Score = 0;
+
+var showingWinScreen = false;
+var showingMenu = true;
+var showingSetting = false;
+var gameScreen = false;
+
+var keyLeft = false;
+var keyRight = false;
+
+
+function calculateMousePos(evt){
+	var rect = canvas.getBoundingClientRect();
+	var root = document.documentElement;
+	var mouseX = evt.clientX - rect.left - root.scrollLeft;//relative to scrolling
+	var mouseY = evt.clientY - rect.top - root.scrollTop;
+	return {
+		x:mouseX,
+		y:mouseY
+	};
+}
+
+function handleMouseClick(evt){
+	if(showingWinScreen){
+		showingWinScreen = false;
+		showingMenu = true;
+	}
+	else if(showingMenu){
+		var mousePos = calculateMousePos(evt);
+		if(mousePos.x >= 350 && mousePos.x <= 450 && mousePos.y >=280 && mousePos.y<= 320){
+			gameStartRoutine();
+		}
+		if(mousePos.x >= 350 && mousePos.x <= 450 && mousePos.y >=335 && mousePos.y<= 365){
+			showingMenu = false;
+			showingSetting = true;
+		}
+	}
+	else if(showingSetting){
+		var mousePos = calculateMousePos(evt);
+		if(handleSetting(mousePos)){
+			showingSetting = false;
+			showingMenu = true;
+		}
+
+	}
+}
+function gameStartRoutine(){
+	player1Score = 0;
+	player2Score = 0;
+	switch(botLevel){
+		case "Normal":
+			botSpeed = 6;
+			break;
+		case "Boring":
+			botSpeed = 4;
+			break;
+		case "God tier":
+			botSpeed = 15;
+			break;
+	}
+	switch(speedLevel){
+		case "Normal":
+			ballStartSpeed = 500;
+			break;
+		case "Turtle":
+			ballStartSpeed = 300;
+			break;
+		case "Lightning":
+			ballStartSpeed = 800;
+			break;
+	}
+	ballSpeedX = ballStartSpeed;
+	ballSpeedY = ballStartSpeed/2;
+	showingMenu = false;
+	gameScreen = true;
+
+}
+
+function handleSetting(mousePos){
+	if(mousePos.x >= 350 && mousePos.x <= 450 && mousePos.y >=475 && mousePos.y<= 505){
+			return true;
+	}
+	if(mousePos.x >= 400 && mousePos.x <= 550 && mousePos.y >=275 && mousePos.y<= 305)
+			botActivate = !botActivate;
+	if(mousePos.x >= 400 && mousePos.x <= 460 && mousePos.y >=325 && mousePos.y<= 355)
+			botLevel = "Boring";
+	if(mousePos.x >= 470 && mousePos.x <= 550 && mousePos.y >=325 && mousePos.y<= 355)
+			botLevel = "Normal";
+	if(mousePos.x >= 560 && mousePos.x <= 640 && mousePos.y >=325 && mousePos.y<= 355)
+			botLevel = "God tier";
+	if(mousePos.x >= 400 && mousePos.x <= 460 && mousePos.y >=375 && mousePos.y<= 405)
+			speedLevel = "Turtle";
+	if(mousePos.x >= 470 && mousePos.x <= 550 && mousePos.y >=375 && mousePos.y<= 405)
+			speedLevel = "Normal";
+	if(mousePos.x >= 560 && mousePos.x <= 650 && mousePos.y >=375 && mousePos.y<= 405)
+			speedLevel = "Lightning";
+
+
+	return false;
+}
+
+
+
+window.onload = function(){
+	canvas = document.getElementById('gameCanvas');
+	canvasContext = canvas.getContext('2d');
+	drawEverthing();
+
+	setInterval(function(){
+		moveKey();
+		moveBall();
+		drawEverthing();
+	}, 1000/fps);
+
+	canvas.addEventListener('mousedown', handleMouseClick);
+
+	canvas.addEventListener('mousemove',
+		function(evt) {
+			var mousePos = calculateMousePos(evt);
+			paddleLeftY = mousePos.y-PADDLE_HEIGHT/2;
+		});
+
+	document.addEventListener('keydown', function(evt){
+		if(!botActivate && (evt.keyCode == 38 || evt.keyCode == 40))
+			keyRight = evt.keyCode;
+		if(evt.keyCode == 87 || evt.keyCode == 83)
+			keyLeft = evt.keyCode;
+	});
+	document.addEventListener('keyup', function(evt){
+		if(evt.keyCode == 38 || evt.keyCode == 40)
+			keyRight = false;
+		if(evt.keyCode == 87 || evt.keyCode == 83)
+			keyLeft = false;
+	})
+	document.addEventListener('keydown', function(evt){
+			if(evt.keyCode == 27){
+				showingMenu = true;
+				showingSetting = false;
+				showingWinScreen = false;
+				gameScreen = false;
+			}
+	});
+
+}
+
+function ballReset(){
+	if(player1Score >= POINTS_TO_WIN || player2Score >= POINTS_TO_WIN){
+		gameScreen = false;
+		showingWinScreen = true;
+		
+	}
+
+	if(ballSpeedX>0){
+		ballSpeedX = -ballStartSpeed;
+
+	}
+	else{ 
+		ballSpeedX = ballStartSpeed;
+
+	}
+	ballX = canvas.width/2;
+	ballY = canvas.height/2;
+	hitCount=0;
+}
+function moveKey(){
+	if(keyRight){
+		switch(keyRight){
+			case 38:
+				if(paddleRightY + PADDLE_HEIGHT/2>0)//keeping paddle in bounds
+					paddleRightY-=10;
+				break;
+			case 40:
+				if(paddleRightY + PADDLE_HEIGHT/2<canvas.height)//keeping paddle in bounds
+					paddleRightY+=10;
+				break;
+		}
+	}
+	if(keyLeft){
+		switch(keyLeft){
+			case 87:
+				if(paddleLeftY + PADDLE_HEIGHT/2>0)//keeping paddle in bounds
+					paddleLeftY-=10;
+				break;
+			case 83:
+				if(paddleLeftY + PADDLE_HEIGHT/2<canvas.height)//keeping paddle in bounds
+					paddleLeftY +=10;
+				break;
+		}
+	}
+}
+function computerMovement(){
+	// switch(botLevel){
+	// 	case "Normal":
+	// 		botSpeed = 6;
+	// 		break;
+	// 	case "Boring":
+	// 		botSpeed = 4;
+	// 		break;
+	// 	case "God tier":
+	// 		botSpeed = 11;
+	// 		break;
+	// }
+	if(paddleRightY+ PADDLE_HEIGHT/2 < ballY-35)
+		paddleRightY += botSpeed;
+	else if(paddleRightY+ PADDLE_HEIGHT/2 > ballY+35) 
+		paddleRightY -= botSpeed;
+}
+
+function moveBall(){
+	if(!gameScreen)
+		return;
+	
+	if(botActivate)
+		computerMovement();
+
+	ballX += ballSpeedX/fps;
+	if(ballX > canvas.width) {
+		if(ballY > paddleRightY && ballY < paddleRightY+PADDLE_HEIGHT){
+			ballSpeedX = -ballSpeedX * 1.05;
+			var deltaY = ballY - (paddleRightY + PADDLE_HEIGHT/2);//ballY depends on the contact position to paddleY
+			ballSpeedY = deltaY*10*(1+hitCount/100);
+			hitCount++;
+		}
+		else {
+			player1Score++; //must be called before ball reset
+			ballReset();
+		}	
+	}	
+	else if(ballX<0){
+		if(ballY > paddleLeftY && ballY < paddleLeftY+PADDLE_HEIGHT){
+			ballSpeedX = -ballSpeedX * 1.05;
+			var deltaY = ballY - (paddleLeftY + PADDLE_HEIGHT/2);
+			ballSpeedY = deltaY*10*(1+hitCount/100);
+			hitCount++;
+		}
+		else {
+			player2Score++;//must be called before ball rest
+			ballReset();
+		}	
+	}
+		
+		
+	ballY += ballSpeedY/fps;
+
+	if(ballY > canvas.height) {
+		ballSpeedY = -ballSpeedY;		
+	}	
+	else if(ballY<0)
+		ballSpeedY = -ballSpeedY;
+}
+
+function drawWinScreen(){
+	canvasContext.fillStyle = 'white';
+	canvasContext.font = "20px Georgia";
+	canvasContext.fillText(player1Score, 200, 100,50);
+	canvasContext.fillText(player2Score, 600, 100,50);
+	canvasContext.textAlign = "center";
+	if(botActivate){
+		if(player2Score>player1Score){
+			canvasContext.fillText("You lost.. click to continue", canvas.width/2, canvas.height/2);
+		}else canvasContext.fillText("You won!! click to continue", canvas.width/2, canvas.height/2);
+	}
+	else {
+		if(player2Score>player1Score){
+			canvasContext.fillText("Player 2 wins. click to continue", canvas.width/2, canvas.height/2);
+		}else canvasContext.fillText("Player 1 wins. click to continue", canvas.width/2, canvas.height/2);
+	}
+}
+
+function drawMenu(){
+	canvasContext.fillStyle = 'white';
+	canvasContext.font = "60px Georgia";
+	canvasContext.textAlign = "center";
+	canvasContext.fillText("Mr.Ping & Mr.Pong", canvas.width/2,200);
+	canvasContext.font = "20px Georgia";
+	canvasContext.fillText("Start Game", canvas.width/2, 300);
+	canvasContext.fillText("Setting", canvas.width/2, 350);
+	if(botActivate){
+		canvasContext.fillText("Bot Level: " + botLevel, canvas.width/2, 450);		
+	}
+		canvasContext.fillText("Speed Level: " + speedLevel, canvas.width/2, 400);
+}
+
+function drawSetting(){
+	canvasContext.fillStyle = 'white';
+	canvasContext.textAlign = "start";
+	canvasContext.font = "20px Georgia";
+	canvasContext.fillText("Mode:", canvas.width/3, 300);
+	canvasContext.fillText("Ball Speed: ", canvas.width/3, 400);
+	canvasContext.fillText("Turtle  | Normal | Lightning", canvas.width/2, 400);
+
+	if(botActivate){
+		canvasContext.fillText("Difficulty: ", canvas.width/3, 350);
+		canvasContext.fillText("Boring | Normal | God tier", canvas.width/2, 350);
+		canvasContext.fillText("Bot Challenge", canvas.width/2, 300);
+		canvasContext.textAlign = "center";
+		canvasContext.fillText("Bot Difficulty: " + botLevel + "        Current Speed: " + speedLevel, canvas.width/2, 450 );
+	}
+	else{
+		canvasContext.fillText("2 Player Mode", canvas.width/2, 300);
+		canvasContext.textAlign = "center";
+		canvasContext.fillText("Current Speed: " + speedLevel, canvas.width/2, 450 );
+	}
+		
+	canvasContext.fillText("Menu (Esc)", canvas.width/2, 500);
+	canvasContext.fillText("To controll Mr.Ping(Left) use W , S key.", canvas.width/2, 150);
+	canvasContext.fillText("To controll Mr.Pong(Right) use ↑ , ↓ key.", canvas.width/2, 200);
+}
+
+
+function drawNet(){
+	for(var i = 0; i<canvas.height; i+= 40 ){
+		colorRect(canvas.width/2-1, i, 2, 20, 'white');
+	}
+}
+
+function drawEverthing(){
+	
+	//draws a black space
+	colorRect(0,0,canvas.width, canvas.height,'black');
+
+	if(showingMenu){
+		drawMenu();
+		return;
+	}
+
+	if(showingWinScreen){
+		drawWinScreen();
+		return;
+	}	
+
+	if(showingSetting){
+		drawSetting();
+		return;
+	}
+
+	drawNet();
+	//draws a ball with respected size and color
+	colorBall(ballX, ballY, ballSize,'white');
+
+	//draws the left player rectangle
+	colorRect(0, paddleLeftY, PADDLE_WIDTH ,PADDLE_HEIGHT, 'white');
+
+	//draws the right player or computer rectangle
+	colorRect(canvas.width- PADDLE_WIDTH, paddleRightY, PADDLE_WIDTH ,PADDLE_HEIGHT, 'white');
+
+	canvasContext.font = "20px Georgia";
+	canvasContext.fillText(player1Score, 200, 100,50);
+	canvasContext.fillText(player2Score, 600, 100,50);
+
+
+}
+
+function colorRect(leftX, topY, width, height, drawColor){
+	canvasContext.fillStyle = drawColor;
+	canvasContext.fillRect(leftX,topY,width, height);
+}
+
+function colorBall(centreX, centreY, ballSize, drawColor){
+	canvasContext.fillStyle = drawColor;
+	canvasContext.beginPath();
+	canvasContext.arc(centreX, centreY, ballSize, 0, Math.PI*2, true);
+	canvasContext.fill();
+
+	// colorRect(leftX, topY, ballSize ,ballSize, drawColor);
+	// colorRect(leftX+(ballSize/4), topY-ballSize/4, ballSize/2 ,ballSize*1.5, drawColor);
+	// colorRect(leftX-(ballSize/4), topY+ballSize/4, ballSize*1.5 ,ballSize/2, drawColor);
+}
+
+
+</script>
+</body>
+</html>
