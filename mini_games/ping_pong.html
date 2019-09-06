@@ -198,16 +198,20 @@ function ballReset(){
 
 	if(ballSpeedX>0){
 		ballSpeedX = -ballStartSpeed;
+		ballSpeedY = ballSpeedY/10;
 
 	}
 	else{ 
 		ballSpeedX = ballStartSpeed;
+		ballSpeedY = ballSpeedY/10;
 
 	}
 	ballX = canvas.width/2;
 	ballY = canvas.height/2;
 	hitCount=0;
 }
+
+
 function moveKey(){
 	if(keyRight){
 		switch(keyRight){
