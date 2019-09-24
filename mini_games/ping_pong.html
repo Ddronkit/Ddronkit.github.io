@@ -6,16 +6,24 @@
         <link href="ping_pong.css" rel="stylesheet" />
     </head>
 <body style="padding: 0; margin: 0;">
-	<script language="javascript" type="text/javascript" 
-                src="mini_game_header.txt"></script>
-        <ul>
-            <li><a href="../index.html">Home</a></li>
-            <li><a href="../projects.html">Projects</a></li>
-            <li><a class="active" href="ping_pong.html">Mini game</a></li>
-            <li style="float:right"><a href="../about.html">About</a></li>
-        </ul>
-	<canvas id = "gameCanvas" width = "800" height = "600">
-	</canvas>
+	<div class = "banner-block">
+		<script language="javascript" type="text/javascript" 
+			src="mini_game_header.txt"></script>
+		<ul>
+			<li><a href="../index.html">Home</a></li>
+			<li><a href="../projects.html">Projects</a></li>
+			<li><a class="active" href="ping_pong.html">Mini game</a></li>
+			<li style="float:right"><a href="../about.html">About</a></li>
+		</ul>
+	</div>
+	
+	<div class = "game-container">
+		<div class = "game-ctr-msg">
+			
+		</div>
+		<canvas id = "gameCanvas" width = "800" height = "600">
+		</canvas>
+	</div>
 	<script>
 
 	var canvas
@@ -57,8 +65,8 @@
 	function calculateMousePos(evt){
 		var rect = canvas.getBoundingClientRect();
 		var root = document.documentElement;
-		var mouseX = evt.clientX - rect.left - root.scrollLeft;//relative to scrolling
-		var mouseY = evt.clientY - rect.top - root.scrollTop;
+		var mouseX = evt.clientX - rect.left ;//relative to scrolling
+		var mouseY = evt.clientY - rect.top ;
 		return {
 			x:mouseX,
 			y:mouseY

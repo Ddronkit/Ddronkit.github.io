@@ -27,7 +27,7 @@
 
 }	
 .pj-linkVanL{
-	width: 60%;
+	width: 90%;
 	height: auto;
 	padding: 3px 0px 0px 20px;
 	text-align: left;
@@ -40,8 +40,15 @@
 	right:10%;
 	top:0%;
 }
-.pj-linkVan-text{
-	font-size: 20px;
+.ping-pong-img{
+	z-index: 1;
+	position: absolute;
+	height: 540px;
+	top:0%;
+	left: 10%;
+}
+.pj-text{
+	font-size: auto;
 }
 .item-container{
 	position: relative;
