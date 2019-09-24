@@ -1,6 +1,7 @@
 canvas{
+    top: 50%;
+    z-index: 1;
     margin-right: auto;
     margin-left: auto;
-    margin-top: 20px;
     display: block;
 }

@@ -1,0 +1,76 @@
+.pj-container{
+	height: auto;
+	text-align: center;
+	position: relative;
+}
+
+.pj-item{
+	z-index: 1;
+	height: 300px;
+	width: 40%;
+	background-color: rgb(250, 121, 0);
+	position: absolute;
+	top:22%;
+	left: 10%;
+	margin: 0 auto;
+	/* border-radius: 25px; */
+}
+.pj-taskML{
+	width: 60%;
+	height: auto;
+	padding: 3px 0px 0px 20px;
+	text-align: left;
+}
+.pj-taskMR{
+	width: 40%;
+	height: auto;
+
+}	
+.pj-linkVanL{
+	width: 60%;
+	height: auto;
+	padding: 3px 0px 0px 20px;
+	text-align: left;
+}
+.pj-linkVan-vid{
+	z-index: 1;
+	position: absolute;
+	height:540px;
+	width: 30%;
+	right:10%;
+	top:0%;
+}
+.pj-linkVan-text{
+	font-size: 20px;
+}
+.item-container{
+	position: relative;
+	width: 100%;
+	top:0px;
+	height: 540px;
+}
+.bkground-olap{
+	position: absolute;
+	width: 100%;
+	top:0px;
+	height: 540px;
+}
+.bkground-olapL{
+	position: absolute;
+	z-index: 0;
+	width: 50%;
+	top:0%;
+	height: 100%;
+	background-color: #333;
+	text-align: right;
+}
+.bkground-olapR{
+	position: absolute;
+	z-index: 0;
+	width: 50%;
+	top:0%;
+	left: 50%;
+	height: 100%;
+	background-color: grey;
+	text-align: right;
+}

@@ -1,0 +1,63 @@
+.main-container{
+    position: relative;
+}
+.nav-container{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 30%;
+    padding: 0;
+    margin:0;
+}
+.mid-container{
+    position: absolute;
+    top: 0px;
+    left: 30%;
+    height: 100%;
+    width: 70%;
+    padding: 0;
+    margin:0;
+}
+.name-container{
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    height: 50%;
+    width: 50%;
+    background-color: blue;
+}
+.background{
+    z-index: 0;
+    position: absolute;
+    background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)),
+    url(../images/Piano.jpeg) no-repeat left; 
+    background-size: cover;
+    top:0px;
+    height: 450px;
+    transform: scaleX(-1);
+}
+.navbar{
+    z-index: 1;
+    height: 30%;
+    width: 30%;
+    top: 40%;
+    padding: 0;
+    margin:0 auto;
+    background-color: transparent;
+    position: fixed;
+    text-align: right;
+}
+.navbar li a{
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    display: block;
+    font-family: "Quicksand", Arial, sans-serif;
+    font-weight: 400;
+    font-size: 25px;
+    line-height: 2.5;
+    color: rgba(0, 0, 0, 0.7);
+}
+.active {
+    color: rgb(250, 121, 0);
+}
