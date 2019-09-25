@@ -56,8 +56,7 @@
 	height: 540px;
 }
 .pj-text{
-	font-size: auto;
-	font-weight: bolder;
+	font-size: 100%;
 }
 .item-container{
 	position: relative;
