@@ -26,7 +26,7 @@
 	height: auto;
 
 }	
-.pj-linkVanL{
+.pj-itemL{
 	width: 90%;
 	height: auto;
 	padding: 3px 0px 0px 20px;
@@ -47,8 +47,16 @@
 	top:0%;
 	right: 60%;
 }
+.taskManager-img{
+	z-index: 1;
+	position: absolute;
+	height: 540px;
+	top:0%;
+	right: 20%;
+}
 .pj-text{
 	font-size: auto;
+	font-weight: bolder;
 }
 .item-container{
 	position: relative;
