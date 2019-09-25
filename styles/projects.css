@@ -41,7 +41,8 @@
 	top:0%;
 }
 .ping-pong-img{
-	height: 540px;
+	height: 100%;
+	width: 80%;
 }
 .img-container{
 	z-index: 1;
