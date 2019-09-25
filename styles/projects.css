@@ -41,18 +41,18 @@
 	top:0%;
 }
 .ping-pong-img{
+	height: 540px;
+}
+.img-container{
 	z-index: 1;
 	position: absolute;
-	height: 540px;
+	height:540px;
+	width: 30%;
+	right:10%;
 	top:0%;
-	right: 60%;
 }
 .taskManager-img{
-	z-index: 1;
-	position: absolute;
 	height: 540px;
-	top:0%;
-	right: 20%;
 }
 .pj-text{
 	font-size: auto;
